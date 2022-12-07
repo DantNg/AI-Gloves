@@ -31,10 +31,10 @@ class CharactersRecognition:
                 all_df = all_df.append(df)  
         except Exception:
             print('Có lỗi khi đọc file')
-        print(all_df)
+        #print(all_df)
         all_df.to_csv('ALL_DATA.csv',index=False)
         X_train, X_test, y_train, y_test = train_test_split(
-            self.X, self.y, test_size=0.2)
+            self.X, self.y, test_size=0.4)
         self.rf = RandomForestClassifier()
         self.rf.fit(X_train.values, y_train)
         print("Trainning complete!")

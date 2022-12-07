@@ -46,7 +46,7 @@ class Gloves:
                     if line:
                         string = line.decode()  # convert the byte string to a unicode string
                         self.data = string.split('\t')
-                        self.data[6] = self.data[6][:-1] 
+                        self.data[9] = self.data[9][:-1] 
                         for i in range(0, len(self.data)):
                             self.data[i] = int(self.data[i])
                         print(self.data)
@@ -54,15 +54,15 @@ class Gloves:
                 print("Failed to read serial!")
 if __name__ == "__main__":
     gloves = Gloves()
-    gloves.set_device_connections('COM34',115200)
+    gloves.set_device_connections('COM15',57600)
     gloves.connect2Devices()
     log_data =[]
     for i in range(10):
         gloves.readData()
         log_data.append(gloves.data)
     gloves.disconnect2Device()
-    df = pd.DataFrame(log_data,columns=['F1','F2','F3','F4','F5','X','Y'])
-    df['LABEL']='B'
+    df = pd.DataFrame(log_data,columns=['F1','F2','F3','F4','F5','X','Y','B1','B2','B3'])
+    df['LABEL']='A'
     print(df)
-    df.to_csv('TrainingData\B.csv',index=False)
+    df.to_csv('TrainingData\A.csv',index=False)
     

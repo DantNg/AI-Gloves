@@ -14,10 +14,12 @@ int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 #define L3 25
 #define L4 14
 #define L5 13
-
+#define B1 27
+#define B2 33
+#define B3 32
 int minVal=265;
 int maxVal=402;
-int l1,l2,l3,l4,l5;
+int l1,l2,l3,l4,l5,b1,b2,b3;
 double x;
 double y;
 
@@ -30,6 +32,9 @@ Wire.write(0);
 Wire.endTransmission(true);
 Serial.begin(115200);
 SerialBT.begin("ESP32test"); //Bluetooth device name
+pinMode(B1,INPUT_PULLUP);
+pinMode(B2,INPUT_PULLUP);
+pinMode(B3,INPUT_PULLUP);
 }
 
 void loop(){
@@ -53,6 +58,15 @@ Serial.print("\t");
 Serial.print(int(x));
 Serial.print("\t");
 Serial.print(int(y));
+Serial.print("\t");
+
+Serial.print(b1);
+Serial.print("\t");
+
+Serial.print(b2);
+Serial.print("\t");
+
+Serial.print(b3);
 Serial.println();
 /////////////////////////////
 SerialBT.print(l1);
@@ -73,7 +87,17 @@ SerialBT.print("\t");
 SerialBT.print(int(x));
 SerialBT.print("\t");
 SerialBT.print(int(y));
+SerialBT.print("\t");
+
+SerialBT.print(b1);
+SerialBT.print("\t");
+
+SerialBT.print(b2);
+SerialBT.print("\t");
+
+SerialBT.print(b3);
 SerialBT.println();
+
 
 delay(500);
 }
@@ -84,6 +108,9 @@ void readSensor()
   l3 = mpuKalmanFilter.updateEstimate(analogRead(L3));
   l4 = mpuKalmanFilter.updateEstimate(analogRead(L4));
   l5 = mpuKalmanFilter.updateEstimate(analogRead(L5));
+  b1 = digitalRead(B1);
+  b2 = digitalRead(B2);
+  b3 = digitalRead(B3);
 }
 void readIMU(){
   Wire.beginTransmission(MPU_addr);
@@ -101,13 +128,15 @@ x= RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
 y= RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
 //x=mpuKalmanFilter.updateEstimate(x);
 //y=mpuKalmanFilter.updateEstimate(y);
-if(x<40 || x>320) x =0;
-else if(x>50&&x<130) x= 90;
-else if(x>140&&x<230) x = 180;
-else if(x>230 && x<310) x =270;
 
-if(y<40 || y>320) y =0;
-else if(y>50&&y<130) y= 90;
-else if(y>140&&y<230) y = 180;
-else if(y>230 && y<310) y =270;
+if(x<45 || x>320) x =0;
+else if(x>45&&x<135) x= 90;
+else if(x>135&&x<230) x = 180;
+else if(x>230 && x<320) x =270;
+
+if(y<45 || y>320) y =0;
+else if(y>45&&y<135) y= 90;
+else if(y>135&&y<230) y = 180;
+else if(y>230 && y<320) y =270;
+
 }

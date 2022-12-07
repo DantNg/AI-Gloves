@@ -55,8 +55,7 @@ class MainWindow:
         self.uic.trainBtn.clicked.connect(self.characterRecognition.TrainData)
         self.uic.connectDeviceBtn.clicked.connect(self.startConnect2Device_TAB3)
         self.uic.save_log_btn.clicked.connect(self.startLogData)
-        
-        self.uic.trainBtn.clicked.connect(CharactersRecognition().TrainData)
+        #self.uic.trainBtn.clicked.connect(CharactersRecognition().TrainData)
     # @pyqtSlot()
     # def fade(self):
     #     self.uic.pushButton_3 = self.sender()  # enter the "fading button" state
@@ -64,15 +63,18 @@ class MainWindow:
     #     self.uic.pushButton_3.setStyleSheet("background-color: red")
     
     def startConnect2Device_TAB1(self):
-        try:
-            self.uic.connectDeviceBtn_2.setText('Ngắt kết nối')
-            self.device.set_device_connections(self.uic.comSelect.currentText(),int(self.uic.baudSelect.currentText()))
-            if self.device.connect2Devices():
-                tab1_reading = threading.Thread(target=self.getDataFromDevice_TAB1)
-                tab1_reading.start()
-        except:
-            self.device.disconnect2Device()
-            print("Lỗi kết nối đến thiết bị!")
+        if self.uic.connectDeviceBtn_2.text == "Kết nối":
+            try:
+                self.uic.connectDeviceBtn_2.setText('Ngắt kết nối')
+                self.device.set_device_connections(self.uic.comSelect.currentText(),int(self.uic.baudSelect.currentText()))
+                if self.device.connect2Devices():
+                    tab1_reading = threading.Thread(target=self.getDataFromDevice_TAB1)
+                    tab1_reading.start()
+            except:
+                self.device.disconnect2Device()
+                print("Lỗi kết nối đến thiết bị!")
+        else:
+            self.uic.connectDeviceBtn_2.setText('Kết nối')
     def startConnect2Device_TAB3(self):
         if self.uic.connectDeviceBtn.text() == 'Kết nối' or self.uic.connectDeviceBtn_2.text() == 'Kết nối':
             self.uic.connectDeviceBtn.setText('Ngắt kết nối')
@@ -121,10 +123,10 @@ class MainWindow:
     def getDataFromDevice_TAB3(self):
         while(self.uic.connectDeviceBtn.text() == 'Ngắt kết nối'):
             self.device.readData()
-            #self.displayValue()
+            self.displayValue()
             serial = self.device.data
-            self.characterRecognition = CharactersRecognition().predictData(serial)
-            self.uic.charDetec.setText(self.characterRecognition)  
+            self.characterRecog = self.characterRecognition.predictData(serial)
+            self.uic.charDetec.setText(self.characterRecog)  
     def startLogData(self):
         try:
             self.uic.num_sample.setText('0')
@@ -142,9 +144,9 @@ class MainWindow:
                 self.device.readData()
                 lst.append(self.device.data)
                 self.uic.num_sample.setText(str(i+1))
-                self.displayValue()
+                #self.displayValue()
             self.device.disconnect2Device()
-            df = pd.DataFrame(lst,columns=['F1','F2','F3','F4','F5','X','Y'])
+            df = pd.DataFrame(lst,columns=['F1','F2','F3','F4','F5','X','Y','B1','B2','B3'])
             df['LABEL'] = label
             df.to_csv('TrainingData\\'+label+'.csv',index=False)
             print("Đã lưu dữ liệu!")
