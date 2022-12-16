@@ -63,7 +63,11 @@ class MainWindow:
     #     self.uic.pushButton_3.setStyleSheet("background-color: red")
     
     def startConnect2Device_TAB1(self):
-        if self.uic.connectDeviceBtn_2.text == "Kết nối":
+        print(self.uic.connectDeviceBtn_2.text())
+        if self.uic.connectDeviceBtn_2.text() == 'Ngắt kết nối':
+            self.uic.connectDeviceBtn_2.setText('Kết nối')
+            self.device.disconnect2Device()
+        else:
             try:
                 self.uic.connectDeviceBtn_2.setText('Ngắt kết nối')
                 self.device.set_device_connections(self.uic.comSelect.currentText(),int(self.uic.baudSelect.currentText()))
@@ -73,8 +77,7 @@ class MainWindow:
             except:
                 self.device.disconnect2Device()
                 print("Lỗi kết nối đến thiết bị!")
-        else:
-            self.uic.connectDeviceBtn_2.setText('Kết nối')
+        
     def startConnect2Device_TAB3(self):
         if self.uic.connectDeviceBtn.text() == 'Kết nối' or self.uic.connectDeviceBtn_2.text() == 'Kết nối':
             self.uic.connectDeviceBtn.setText('Ngắt kết nối')
@@ -94,6 +97,7 @@ class MainWindow:
     def getDataFromDevice_TAB1(self):
         lastCharacterRecognition =''
         confirmChar =0
+        SOS_COUNT = 0
         while(self.uic.connectDeviceBtn_2.text() == 'Ngắt kết nối'):
             self.device.readData()
             #self.displayValue()
@@ -104,7 +108,9 @@ class MainWindow:
             else:
                 lastCharacterRecognition =self.characterRecognition 
                 confirmChar = 0 #reset confirm
-
+            if SOS_COUNT == 3:
+                print("SOS")
+                SOS_COUNT = 0
             if(confirmChar == 3): #Xác nhận đúng 3 lần 
                 if self.characterRecognition == 'DELETE' and len(self.contentEntry) > 0:
                     self.contentEntry = self.contentEntry[:-1]
@@ -114,6 +120,8 @@ class MainWindow:
                     convertText2Speech(ViUtils.add_accents(self.contentEntry))
                     print("Phát âm thanh")
                     self.contentEntry = ''
+                elif self.characterRecognition == 'S':
+                    SOS_COUNT = SOS_COUNT + 1
                 else:
                     self.contentEntry = self.contentEntry+self.characterRecognition
                 print(self.contentEntry)    
