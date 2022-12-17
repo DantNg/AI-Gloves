@@ -133,7 +133,7 @@ class MainWindow:
             self.device.readData()
             self.displayValue()
             serial = self.device.data
-            self.characterRecog = self.characterRecognition.predictData(serial)
+            self.characterRecog = CharactersRecognition().predictData(serial)
             self.uic.charDetec.setText(self.characterRecog)  
     def startLogData(self):
         try:
