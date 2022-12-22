@@ -24,7 +24,7 @@ def convertSpeech2Text():
         print("Không nhận được voice!")
         return 0
 if __name__ == "__main__":
-#    text = ViUtils.add_accents('Xin chào mọi người')
-#    print(text)
-#    convertText2Speech(text)
-    convertSpeech2Text()
+   text = ViUtils.add_accents('Xin chào mọi người')
+   print(text)
+   convertText2Speech(text)
+    #convertSpeech2Text()
