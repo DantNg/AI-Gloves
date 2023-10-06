@@ -2,7 +2,7 @@
 #Coded By Sihab Sahariar
 from PyQt5 import QtCore, QtGui, QtWidgets
 import serial
-s = serial.Serial('COM5',9600,timeout = 2) #My Bluetooth COM Port is 5
+# s = serial.Serial('COM5',9600,timeout = 2) #My Bluetooth COM Port is 5
 class Ui_MainWindow(object):
     #def setupUi(self, MainWindow):
     def __init__(self):
@@ -105,7 +105,8 @@ class Ui_MainWindow(object):
         self.pushButton_2.clicked.connect(self.led_off)
     def led_on(self):
         try:
-            s.write(bytes("a",'utf-8'))
+            pass
+        #     s.write(bytes("a",'utf-8'))
             #self.label_4.setText("<html><head/><body><p align=\"center\">LED ON</p></body></html>")
 
         except Exception as e:
@@ -114,8 +115,8 @@ class Ui_MainWindow(object):
 
     def led_off(self):
         try:
-            
-            s.write(bytes("b",'utf-8'))
+            pass
+        #     s.write(bytes("b",'utf-8'))
         except Exception as e:
             #self.label_4.setText("<html><head/><body><p align=\"center\">SOMETHING WRONG</p></body></html>")
             print(f'Something went wrong: {e}')   
